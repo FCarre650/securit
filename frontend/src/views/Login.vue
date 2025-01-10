@@ -1,7 +1,7 @@
 <template>
     <div class="login-container">
         <div>
-            <img src="assets/images/logo.png" alt="logo"/>
+            <img src="../assets/images/logo.png" alt="logo"/>
         </div>
         <h2>Connexion</h2>
         <form action="/connexion", method="POST">
@@ -29,3 +29,9 @@
         </div>
     </div>
 </template>
+
+
+<script setup>
+
+
+</script>
