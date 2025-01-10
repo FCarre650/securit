@@ -37,7 +37,8 @@ app.use(cookieParser())
 })
 */
 
-app.post('/created_account', async (req, res) => {
+/** 
+app.post('/auth/created_account', async (req, res) => {
     const {email, password, passwordOk} = req.body
     const saltRounds = 3;
     const hash = await bcrypt.hash(password, saltRounds)
@@ -67,6 +68,7 @@ app.post('/created_account', async (req, res) => {
     }
 
 })
+*/
 
 /** 
 app.get('/validation', (req, res) => {
@@ -76,7 +78,7 @@ app.get('/validation', (req, res) => {
 
 ///////////////////////// Partie sécurisée //////////////////////////////////////
 
-app.post('/connexion', async (req, res) => {
+app.post('/auth/connexion', async (req, res) => {
     const { email, password } = req.body;
     const user = await prisma.user.findUnique({
         where: { email }
@@ -94,18 +96,18 @@ app.post('/connexion', async (req, res) => {
             })
             
             res.cookie('code_verif', "123", { httpOnly: true, maxAge: 30 * 60 * 1000 })
-            res.render('verif_code', {email, errorMessage: ""});
+            res.sendStatus(200);
         } else {
-            res.render('login', {errorMessage : "Email ou mot de passe incorrect."})
+            res.sendStatus(403)
         }
     } else {
-        res.render('login', {errorMessage : "Email ou mot de passe incorrect."})
+        res.sendStatus(403)
     }
 })
 
 
 
-app.post('/verif-code', async (req, res) => {
+app.post('/auth/verif-code', async (req, res) => {
     const {email, code} = req.body
     
     if (codes[email] === code) {
