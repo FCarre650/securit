@@ -37,7 +37,7 @@ app.use(cookieParser())
 })
 */
 
-/** 
+
 app.post('/auth/created_account', async (req, res) => {
     const {email, password, passwordOk} = req.body
     const saltRounds = 3;
@@ -58,17 +58,15 @@ app.post('/auth/created_account', async (req, res) => {
                 data: {email, password: hash}
             })
 
-            res.redirect('/validation')
+            res.sendStatus(200)
         }
         
     } else {
-        res.render('register', {
-            errorMessage: "Les deux mots de passe sont différents"},
-        )
+        res.sendStatus(403)
     }
 
 })
-*/
+
 
 /** 
 app.get('/validation', (req, res) => {
