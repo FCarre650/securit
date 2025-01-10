@@ -14,7 +14,7 @@ const routes = [
       component: Login,
    },
    {
-      path: '/verify-code',
+      path: '/verif_code',
       component: VerifyCode,
    },
    {

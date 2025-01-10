@@ -17,7 +17,7 @@ app.set('view engine', 'ejs')
 
 ////////////////////////// MIDDLEWARES ///////////////////////////////////////////////
 app.use('/assets', express.static('./assets'))
-app.use(express.urlencoded({extended: true}))
+app.use(express.json())
 app.use(cookieParser())
 
 
@@ -96,7 +96,7 @@ app.post('/auth/connexion', async (req, res) => {
             })
             
             res.cookie('code_verif', "123", { httpOnly: true, maxAge: 30 * 60 * 1000 })
-            res.sendStatus(200);
+            res.sendStatus(200)
         } else {
             res.sendStatus(403)
         }

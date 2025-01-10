@@ -26,7 +26,7 @@
                     <input type="password" id="passwordOk" name="passwordOk" placeholder="********" minlength="8" required>
                 </div>
             </div>
-            <p class="error"> <%= errorMessage %> </p>
+            <p class="error"> {{ errorMessage }} </p>
             <div class="mb-4">
                 <button type="submit" class="large-button">Créer</button>
             </div>

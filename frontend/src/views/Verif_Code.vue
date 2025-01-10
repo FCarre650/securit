@@ -12,7 +12,7 @@
                     <input type="hidden" name="email" value= "<%= email %>" >
                 </div>
             </div>
-            <p class="error"> <%= errorMessage %> </p>
+            <p class="error"> {{ errorMessage }}</p>
             <button class="large-button" type="submit">Continuer</button>
         </form>
     </div>
