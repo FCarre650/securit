@@ -34,11 +34,13 @@
 <script setup>
     import { ref } from 'vue'
     import router from '../router'
+    import { emailPerson } from '../use/usePersonEmail'
 
     const form_data = ref({})
     const errorMessage = ref("")
 
     async function connexion() {
+        emailPerson.value = form_data.value.email
         const response = await fetch('/auth/connexion', {
             method: 'POST',
             headers: {'Content-type': 'application/json'},
@@ -47,9 +49,9 @@
 
         if (response.status === 200) {
             router.push('verif_code')
-        } else {
+        } else if (response.status){
             errorMessage.value = "Email ou mot de passe incorrect"
-        }
+        } 
     }
 
 </script>
