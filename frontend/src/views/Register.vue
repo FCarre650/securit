@@ -54,7 +54,7 @@
 
         if (response.status === 200) {
             router.push('validation')
-        } else if (response.status === "") { 
+        } else if (response.status === 402) { 
             errorMessage.value = "Cet email est déjà utilisé"
         } else {
             errorMessage.value = "Les deux mots de passe sont différents"
