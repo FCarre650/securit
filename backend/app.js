@@ -21,22 +21,6 @@ app.use(express.json())
 app.use(cookieParser())
 
 
-//////////////////////////////// CRÉATION DE COMPTE //////////////////////////////////////////////////////////
-/**app.get('/register', function (req, res) {
-    res.render('register', {
-        errorMessage: ""
-    })
-})
-*/
-
-//////////////////////////////// PAGE DE LOGIN //////////////////////////////////////
-/**app.get('/login', function (req, res) {
-    res.render('login', {
-        errorMessage: ""
-    })
-})
-*/
-
 
 app.post('/auth/created_account', async (req, res) => {
     const {email, password, passwordOk} = req.body
@@ -50,9 +34,7 @@ app.post('/auth/created_account', async (req, res) => {
         })
         console.log('existingUser', user)
         if (user) {
-            res.render('register', {
-                errorMessage: `Cet email est déjà utilisé' : ${email}`,
-            })
+            res.sendStatus(402)
         } else {
             user = await prisma.user.create ({
                 data: {email, password: hash}
@@ -68,11 +50,6 @@ app.post('/auth/created_account', async (req, res) => {
 })
 
 
-/** 
-app.get('/validation', (req, res) => {
-    res.render('validation')
-})
-*/
 
 ///////////////////////// Partie sécurisée //////////////////////////////////////
 
@@ -96,7 +73,7 @@ app.post('/auth/connexion', async (req, res) => {
             res.cookie('code_verif', "123", { httpOnly: true, maxAge: 30 * 60 * 1000 })
             res.sendStatus(200)
         } else {
-            res.sendStatus(403)
+            res.sendStatus(402)
         }
     } else {
         res.sendStatus(403)
@@ -105,13 +82,13 @@ app.post('/auth/connexion', async (req, res) => {
 
 
 
-app.post('/auth/verif-code', async (req, res) => {
+app.post('/auth/verif_code', async (req, res) => {
     const {email, code} = req.body
     
     if (codes[email] === code) {
         const cookie = req.cookies['code_verif']
         if (cookie !== '123'){
-            res.render('login', {errorMessage: "Code expiré"})
+            res.sendStatus(400)
         } else {
             const user = await prisma.user.findUnique({
                 where: {email: email}
@@ -124,10 +101,10 @@ app.post('/auth/verif-code', async (req, res) => {
                 }
             })
             res.cookie('session_id', session.session_id, {httpOnly: true, maxAge: 60 * 60 * 1000})
-            res.redirect('/visite')
+            res.sendStatus({email}, 200)
         }
     } else {
-        res.render('verif_code', {email, errorMessage: "Code invalide"})
+        res.sendStatus({email}, 403)
     }
 })
 
@@ -175,6 +152,8 @@ app.get('/visite', async function (req, res) {
 })
 */
 
+
+/** 
 app.post('/register-visit', async (req, res) => {
     const {date, company, report} = req.body
     
@@ -198,7 +177,7 @@ app.post('/register-visit', async (req, res) => {
     });
     res.redirect('/visite')
 })
-
+*/
 
 
 const PORT = process.env.PORT || 3000
