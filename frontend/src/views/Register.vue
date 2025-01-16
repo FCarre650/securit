@@ -20,10 +20,10 @@
                 </div>
             </div>
             <div class="form-group mb-4">
-                <label for="passwordOk">Mot de passe (confirmer)</label>
+                <label for="password">Mot de passe (confirmer)</label>
                 <div class="input-container">
                     <span class="icon">🔒</span>
-                    <input type="password" id="passwordOk" name="passwordOk" placeholder="********" minlength="8" v-model="form_data.password" required>
+                    <input type="password" id="passwordOk" name="passwordOk" placeholder="********" minlength="8" v-model="form_data.passwordOk" required>
                 </div>
             </div>
             <p class="error"> {{ errorMessage }} </p>
@@ -41,11 +41,13 @@
 <script setup>
     import { ref } from 'vue'
     import router from '../router'
+    import { emailPerson } from '../use/usePersonEmail'
 
     const form_data = ref({})
     const errorMessage = ref("")
 
     async function created_account() {
+        emailPerson.value = form_data.value.email
         const response = await fetch('/auth/created_account', {
             method: 'POST',
             headers: {'Content-type': 'application/json'},
@@ -54,7 +56,7 @@
 
         if (response.status === 200) {
             router.push('validation')
-        } else if (response.status === 402) { 
+        } else if (response.status === 400) { 
             errorMessage.value = "Cet email est déjà utilisé"
         } else {
             errorMessage.value = "Les deux mots de passe sont différents"
