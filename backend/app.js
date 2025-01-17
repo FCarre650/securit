@@ -32,9 +32,8 @@ app.post('/auth/created_account', async (req, res) => {
                 email
             }
         })
-        console.log('existingUser', user)
         if (user) {
-            res.sendStatus(402)
+            res.sendStatus(400)
         } else {
             user = await prisma.user.create ({
                 data: {email, password: hash}
@@ -57,9 +56,9 @@ app.post('/auth/connexion', async (req, res) => {
     const { email, password } = req.body;
     const user = await prisma.user.findUnique({
         where: { email }
-        })  
+        })
     if (user) {
-        const match = bcrypt.compare(password, user.password);
+        const match = await bcrypt.compare(password, user.password);
         if (match) {
             const code_test = generateRandomCode(4)
             codes[email] = code_test
@@ -73,7 +72,7 @@ app.post('/auth/connexion', async (req, res) => {
             res.cookie('code_verif', "123", { httpOnly: true, maxAge: 30 * 60 * 1000 })
             res.sendStatus(200)
         } else {
-            res.sendStatus(402)
+            res.sendStatus(403)
         }
     } else {
         res.sendStatus(403)
@@ -90,7 +89,7 @@ app.post('/auth/verif_code', async (req, res) => {
         if (cookie !== '123'){
             res.sendStatus(400)
         } else {
-            const user = await prisma.user.findUnique({
+            let user = await prisma.user.findUnique({
                 where: {email: email}
             })
             let session_uuid = uuidv4()
@@ -101,83 +100,20 @@ app.post('/auth/verif_code', async (req, res) => {
                 }
             })
             res.cookie('session_id', session.session_id, {httpOnly: true, maxAge: 60 * 60 * 1000})
-            res.sendStatus({email}, 200)
+            res.sendStatus(200)
         }
     } else {
-        res.sendStatus({email}, 403)
+        res.sendStatus(403)
     }
 })
 
 
-app.use('/', async (req, res, next) => {
-    if (req.cookies.session_id) {
-        next()
-    } else {
-        res.render('login', {errorMessage: "Session expirée"})
-    }
-})
-
-/** 
-app.get('/visite', async function (req, res) {
-    const current_session = req.cookies.session_id
-    const authenticated_user = await prisma.user.findFirst({
-        where: {session: {some: {session_id: current_session}}}
-    })
+app.get('/api/visite', async (req, res) => {
     const visits = await prisma.visit.findMany({
         include: {company : true}
     })
-    res.render('visite', {
-        user: authenticated_user,
-        visits: visits, 
-        errorMessage: ""})
+    res.json(visits)
 })
-*/
-
-
-/**app.get('/new-visite', async (req, res) => {
-    const current_session = req.cookies.session_id
-    const authenticated_user = await prisma.user.findFirst({
-        where: {session: {some: {session_id: current_session}}}
-    })
-
-    const companies = await prisma.company.findMany()
-    const visits = await prisma.visit.findMany({
-        include: {company : true}
-    })
-
-    res.render('new-visite', {
-        user: authenticated_user,
-        companies : companies, 
-        errorMessage: ""})
-})
-*/
-
-
-/** 
-app.post('/register-visit', async (req, res) => {
-    const {date, company, report} = req.body
-    
-    const companyId = parseInt(req.body.company_id,10);
-    const current_session = req.cookies.session_id;
-
-    const authenticated_user = await prisma.user.findFirst({
-        where: {session: {some: {session_id: current_session}}}
-    })
-
-    const new_visit = await prisma.visit.create ({
-        data: {
-            date: new Date (date),
-            company: { connect: { id: companyId} },
-            report: report || "",
-            user: { connect: { id: authenticated_user.id}}
-        }
-    })
-    const visits = await prisma.visit.findMany({
-        include: {company : true }
-    });
-    res.redirect('/visite')
-})
-*/
 
 
 const PORT = process.env.PORT || 3000
