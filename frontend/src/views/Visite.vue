@@ -17,7 +17,7 @@
                     <a href="/new-visite">add</a>
                 </div>
             </div>
-            s
+            
            <table>
                 <thead>
                     <tr>
