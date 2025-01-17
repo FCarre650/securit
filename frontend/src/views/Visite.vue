@@ -14,10 +14,10 @@
                     <i class="fa-solid fa-circle-xmark" style="color:grey"></i>
                 </div>
                 <div class="add-button">
-                    <a href="/new-visite"><i class="fa-solid fa-plus"></i></a>
+                    <a href="/new-visite">add</a>
                 </div>
             </div>
-            
+            s
            <table>
                 <thead>
                     <tr>
@@ -61,6 +61,8 @@
            </div>
         </main>
     </div>
+
+    <!--<i class="fa-solid fa-plus"></i>-->
 </template>
 
 
