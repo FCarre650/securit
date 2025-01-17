@@ -116,6 +116,31 @@ app.get('/api/visite', async (req, res) => {
 })
 
 
+app.post('/api/register_visit', async (req, res) => {
+    const { date, company, report } = req.body
+
+    const companyId = parseInt(req.body.company_id, 10)
+    const current_session = req.cookies.session_id
+
+    const authenticated_user = await prisma.user.findFirst({
+        where: {session: {some: {session_id: current_session}}}
+    })
+
+    const new_visit = await prisma.visit.create ({
+        data: {
+            date: new Date (date),
+            company: { connect: { id: companyId } },
+            report: report || "",
+            user: { connect: { id: authenticated_user.id}}
+        }
+    })
+    const visits = await prisma.visit.findMany({
+        include: {company: true}
+    })
+    res.sendStatus(200)
+})
+
+
 const PORT = process.env.PORT || 3000
 app.listen(PORT, function () {
     console.log(`Server listening on port ${PORT}`)
