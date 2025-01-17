@@ -8,8 +8,7 @@
             <div class="form-group mb-2">
                 <label for="code">Code</label>
                 <div class="input-container">
-                    <input id="code" name="code" type="text" placeholder="Ex: 1234" v-model="form_data.text" required>
-                    <input type="hidden" name="email" value= "{{ email }}" v-model="form_data.email" >
+                    <input id="code" name="code" type="text" placeholder="Ex: 1234" v-model="form_data.code" required>
                 </div>
             </div>
             <p class="error"> {{ errorMessage }}</p>
@@ -20,14 +19,16 @@
 
 
 <script setup>
-/** 
+
     import { ref } from 'vue'
     import router from '../router'
+    import { emailPerson } from '../use/usePersonEmail'
 
     const form_data = ref({})
     const errorMessage = ref("")
 
     async function verif_code() {
+        form_data.value.email = emailPerson.value
         const response = await fetch('/auth/verif_code', {
             method: 'POST',
             headers: {'Content-type': 'application/json'},
@@ -36,12 +37,12 @@
 
         if (response.status === 200) {
             router.push('visite')
-        } else if (response.status === 402) {
+        } else if (response.status === 400) {
             errorMessage.value = "Code expiré"
         } else if (response.status === 403){
             errorMessage.value = "Code invalide"
         }
     }
-*/
+
 
 </script>
