@@ -39,7 +39,7 @@
             router.push('visite')
         } else if (response.status === 400) {
             errorMessage.value = "Code expiré"
-        } else if (response.status === 403){
+        } else {
             errorMessage.value = "Code invalide"
         }
     }

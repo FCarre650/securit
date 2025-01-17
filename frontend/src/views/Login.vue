@@ -48,8 +48,8 @@
         })
 
         if (response.status === 200) {
-            router.push('verif_code')
-        } else if (response.status){
+            router.push('Verif_Code')
+        } else {
             errorMessage.value = "Email ou mot de passe incorrect"
         } 
     }
