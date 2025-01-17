@@ -16,9 +16,8 @@
                     <label for="entreprise">Entreprise</label>
                     <select id="company" name="company_id" required="">
                         <option value="" disabled="" selected="">Choisissez ...</option>
-                        <% for (const company of companies) { %>
-                        <option name="company" value="<%= company.id %>"><%= company.name %></option>
-                        <% }; %>
+                        
+                        <option name="company" value="<%= company.id %>">{{ company.name }}</option>
                     </select>
                 </div>
                 <div class="form-group mb-4">
@@ -54,5 +53,19 @@
 
 
 <script setup>
+
+    import { visits } from '../use/useVisit'
+    import { ref, onMounted } from 'vue'
+
+    const visitList = ref([])
+
+    onMounted(async () => {
+        const response = await fetch('/api/new-visite')
+        visitList.value = await response.json()
+
+        for (const visit of visitList.value) {
+            visits.value[visit.id] = visit
+        }
+    })
 
 </script>
