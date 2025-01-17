@@ -17,7 +17,7 @@
                     <a href="/new-visite"><i class="fa-solid fa-plus"></i></a>
                 </div>
             </div>
-            <% for (const visit of visits) { %> 
+            
            <table>
                 <thead>
                     <tr>
@@ -27,16 +27,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><%= visit.date.toISOString().slice(0, 10) %></td>
-                        <td><%= visit.company.name %></td>
+                    <tr v-for="visit of visitList" key="visit.id">
+                        <td>{{ new Date(visit.date).toISOString().slice(0, 10) }}</td>
+                        <td>{{ visit.company.name }}</td>
                         <td class="arrow-cell">
                             <a class="arrow-link" href="#">
                                 <i class="fa-solid fa-arrow-right"></i>
                             </a>
                         </td>
                     </tr>
-                    <% }; %>
                 </tbody>
            </table>
 
@@ -66,5 +65,19 @@
 
 
 <script setup>
+
+    import { visits } from '../use/useVisit'
+    import { ref, onMounted } from 'vue'
+
+    const visitList = ref([])
+
+    onMounted(async () => {
+        const response = await fetch('/api/visite')
+        visitList.value = await response.json()
+
+        for (const visit of visitList.value) {
+            visits.value[visit.id] = visit
+        }
+    })
 
 </script>
